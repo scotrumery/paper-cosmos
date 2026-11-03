@@ -43,11 +43,25 @@ kbd { display: inline-block; font: 11px "Segoe UI", sans-serif; padding: 4px 7px
 .pause-button { margin-left: auto; padding: 8px 11px; border-radius: 5px; border: 1px solid #c9cbbf; background: transparent; font-size: 11px; color: #183445; }
 .pause-button:disabled { opacity: .4; cursor: default; }
 .focus-button { margin-left: 0; }
+.ink-controls { padding: 10px 14px; border-top: 1px solid #d6bd9f; }
+.ink-controls > button { float: right; margin-left: 10px; }
+.ink-controls p { font-size: 11px; line-height: 1.4; margin: 7px 0 0; color: #617079; }
+.ink-controls #ink-stage { font-size: 9px; font-weight: 700; letter-spacing: .5px; color: #804b3e; }
+.version { white-space: nowrap; color: #7b857f; }
+.best-value { display: flex; align-items: center; gap: 3px; }
+.reset-best { padding: 2px; min-width: 24px; min-height: 28px; border: 0; background: transparent; color: #62736f; font-size: 16px; border-radius: 4px; opacity: 0; pointer-events: none; }
+.personal-best:hover .reset-best, .personal-best:focus-within .reset-best { opacity: .7; pointer-events: auto; }
+dialog { max-width: min(420px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; padding: 22px; border: 1px solid #c9cbbf; border-radius: 8px; background: #faf7ee; color: #183445; }
+dialog::backdrop { background: #071b35aa; }
+dialog h2 { font-size: 28px; margin: 0 0 16px; }
+dialog p { font-size: 14px; line-height: 1.6; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.dialog-actions button { padding: 10px; border: 1px solid #c9cbbf; border-radius: 4px; background: #f2eedf; color: #183445; }
 .stage { position: relative; aspect-ratio: 4 / 3; background: #142b3b; }
 canvas { display: block; width: 100%; height: 100%; }
 .overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; background: #10263745; }
 .overlay[hidden] { display: none; }
-.overlay-card { text-align: center; padding: 33px 24px 24px; width: 100%; max-width: 350px; border: 1px solid #eee6d159; border-radius: 6px; background: #f8f3e9f5; box-shadow: 0 10px 40px #071b3540; }
+.overlay-card { text-align: center; padding: 33px 24px 24px; width: 100%; max-width: 350px; max-height: 100%; overflow: auto; border: 1px solid #eee6d159; border-radius: 6px; background: #f8f3e9f5; box-shadow: 0 10px 40px #071b3540; }
 .overlay-card .eyebrow { color: #638d85; font-size: 9px; letter-spacing: 2px; }
 h2 { font: 38px/1.08 Georgia, serif; letter-spacing: -1px; margin: 20px 0; }
 .overlay-card p:not(.eyebrow) { font-size: 12px; line-height: 1.8; color: #617079; }
@@ -99,7 +113,17 @@ body.focus-mode .stage { width: min(100cqw, 100cqh * 4 / 3); }
 body.focus-mode .scoreboard { padding: 8px 16px; }
 body.focus-mode .scoreboard strong { font-size: 20px; }
 body.focus-mode .game-footer { padding: 7px 16px; }
+body.focus-mode .ink-controls { padding: 6px 14px; }
+body.focus-mode .ink-controls p { margin-top: 4px; }
+@media (max-height: 650px) {
+  body.focus-mode .overlay-card { padding: 8px; }
+  body.focus-mode .overlay-card h2 { font-size: 22px; margin: 6px 0; }
+  body.focus-mode .overlay-card p:not(.eyebrow) { font-size: 11px; line-height: 1.4; margin: 6px 0; }
+  body.focus-mode .overlay-card .eyebrow, body.focus-mode .overlay-card .overlay-hint { display: none; }
+  body.focus-mode #primary { padding: 9px 18px; margin: 6px 0; }
+}
 @media (max-width: 480px) {
+  .scoreboard { flex-wrap: wrap; gap: 10px; }
   .overlay-card { padding: 8px; }
   .overlay-card h2 { font-size: 22px; margin: 6px 0; }
   .overlay-card .eyebrow, .overlay-card .overlay-hint { display: none; }

@@ -23,18 +23,23 @@
         <div><dt><kbd>P</kbd> / <kbd>Esc</kbd></dt><dd>Pause / resume</dd></div>
         <div><dt><kbd>F</kbd></dt><dd>Focus mode: game fills the window (Esc exits)</dd></div>
       </dl>
-      <p class="small-note">Touch gold from above to boost three rows; steer to land.<br>Catch stars for sparkles. Stay above the coral edge.</p>
+      <p class="small-note">Touch gold from above to boost three rows; steer to land.<br>Catch stars for sparkles. The coral floor keeps accelerating.<br>Progressive ink starts quietly, then mixes sweeps, patrols and lunges.<br>Solid ink hurts; hollow ink warns or rests.</p>
     </section>
     <section class="game-panel" aria-label="Paper Cosmos game">
       <header class="scoreboard">
         <div><span class="score-label">STARDUST</span><strong id="score">0</strong></div>
-        <div><span class="score-label">PERSONAL BEST</span><strong id="best">0</strong></div>
+        <div class="personal-best"><span class="score-label">PERSONAL BEST</span><span class="best-value"><strong id="best">0</strong><button id="reset-best" class="reset-best" aria-label="Clear personal best" title="Clear personal best (confirmation required)">&#8634;</button></span></div>
         <button id="pause" class="pause-button" disabled aria-label="Pause game">Pause</button>
-                <button id="focus" class="pause-button focus-button" aria-pressed="false" title="Hide the page around the game (F). Esc exits.">Focus mode</button>
-              </header>
-              <div id="pressure" class="pressure-bar">UNRAVELING IN 4s - KEEP CLIMBING</div>
-              <div class="stage-frame">
-              <div class="stage">
+        <button id="focus" class="pause-button focus-button" aria-pressed="false" title="Hide the page around the game (F). Esc exits.">Focus mode</button>
+      </header>
+      <div class="ink-controls">
+        <button id="restart" class="pause-button">Restart</button>
+        <p id="ink-stage" role="status" aria-live="polite">QUIET START - ORIGINAL INK</p>
+        <p>Ink grows more varied as you climb. Hollow ink is harmless; solid ink ends a run.</p>
+      </div>
+      <div id="pressure" class="pressure-bar">UNRAVELING IN 4s - KEEP CLIMBING</div>
+      <div class="stage-frame">
+      <div class="stage">
         <canvas id="cosmos" width="960" height="720" aria-label="Origami explorer on branching moving constellation platforms. Use Left/Right or A/D to steer, and a fresh Space press to jump from normal platforms. Touch the gold-framed area of a solar fold to boost automatically. Collect stars for sparkles and stay above the rising coral edge as it consumes the platforms below.">This game needs a browser with HTML canvas support.</canvas>
         <div id="overlay" class="overlay">
           <div class="overlay-card">
@@ -47,10 +52,18 @@
         </div>
       </div>
       </div>
-      <footer class="game-footer"><span id="status" role="status" aria-live="polite">Ready for takeoff</span><span id="footer-hint">Touch gold = auto boost</span></footer>
+      <footer class="game-footer"><span id="status" role="status" aria-live="polite">Ready for takeoff</span><span id="footer-hint">Touch gold = auto boost</span><span class="version" aria-label="Version v1.1">v1.1</span></footer>
       <p id="storage-note" class="storage-note" role="status" hidden></p>
     </section>
     <p class="signature">A universe made of small things. <span>Fold. Leap. Wonder.</span></p>
   </main>
+  <dialog id="reset-best-dialog" aria-labelledby="reset-best-title" aria-describedby="reset-best-copy">
+    <h2 id="reset-best-title">Clear personal best?</h2>
+    <p id="reset-best-copy">This clears this game's personal best in this browser and ends your current run, if any. Start a fresh run afterward. Other saved data is not affected. Local-file and hosted-site records are separate.</p>
+    <div class="dialog-actions">
+      <button id="cancel-reset" autofocus>Keep my record</button>
+      <button id="confirm-reset">Clear best &amp; end run</button>
+    </div>
+  </dialog>
 </body>
 </html>
