@@ -38,6 +38,19 @@ const ui = {
   confirmReset: document.getElementById("confirm-reset")
 };
 const keys = new Set();
+const touchPointers = new Map();
+const touchButtons = {
+  left: document.getElementById("touch-left"),
+  right: document.getElementById("touch-right"),
+  jump: document.getElementById("touch-jump")
+};
+function clearTouchControls() {
+  touchPointers.clear();
+  for (const button of Object.values(touchButtons)) {
+    button.classList.remove("held");
+    if (button === document.activeElement) button.blur();
+  }
+}
 const boostContacts = new Set();
 let spaceHeld = false;
 let best = 0;
@@ -57,6 +70,7 @@ let lastTime = null;
 let sceneTime = 0;
 let frontier;
 let sparkles;
+let viewExtra = 0;
 
 function storageUnavailable() {
   persistence = false;
@@ -85,6 +99,7 @@ function platformXAt(platform, time) {
 }
 
 function resetWorld() {
+  clearTouchControls();
   player = { x: W / 2, y: 620 - PLAYER_H, vy: 0, lean: 0, groundId: 0 };
   platforms = [{ id: 0, level: 0, route: true, x: W / 2 - 65, baseX: W / 2 - 65, y: 620, w: 130, amplitude: 0, phase: 0, frequency: 0 }];
   stars = [];
@@ -210,7 +225,7 @@ function pruneWorld() {
 }
 
 function generatePlatforms() {
-  while (platforms[platforms.length - 1].y > camera - 220) {
+  while (platforms[platforms.length - 1].y > camera - 220 - viewExtra) {
     const previous = platforms[platforms.length - 1];
     // Use the descending intersection of the jump arc, not its full flight time.
     const jumpHeight = JUMP * JUMP / (2 * GRAVITY);
@@ -398,6 +413,7 @@ function saveBest() {
 }
 
 function offerBestReset() {
+  clearTouchControls();
   pause("Personal-best reset requested. Cancel to keep your record and resume when ready.");
   keys.clear();
   spaceHeld = false;
@@ -442,6 +458,7 @@ function start() {
 }
 
 function pause(reason = "Your universe can wait.") {
+  clearTouchControls();
   if (mode !== "playing") return;
   mode = "paused";
   keys.clear();
@@ -454,6 +471,7 @@ function pause(reason = "Your universe can wait.") {
 }
 
 function resume() {
+  clearTouchControls();
   if (mode !== "paused") return;
   mode = "playing";
   keys.clear();
@@ -475,6 +493,7 @@ function showOverlay(kicker, title, copy, button, hint) {
 }
 
 function endRun(reason) {
+  clearTouchControls();
   mode = "over";
   keys.clear();
   saveBest();
@@ -537,7 +556,9 @@ function step(dt) {
     p.x = platformXAt(p, sceneTime);
   }
   if (support) player.x += support.x - support.oldX;
-  const direction = Number(keys.has("ArrowRight") || keys.has("KeyD")) - Number(keys.has("ArrowLeft") || keys.has("KeyA"));
+  const touches = new Set(touchPointers.values());
+  const direction = Number(keys.has("ArrowRight") || keys.has("KeyD") || touches.has("right")) -
+    Number(keys.has("ArrowLeft") || keys.has("KeyA") || touches.has("left"));
   player.x = clamp(player.x + direction * SPEED * dt, PLAYER_W / 2, W - PLAYER_W / 2);
   player.lean += (direction * .18 - player.lean) * Math.min(1, dt * 12);
   if (support && player.x + PLAYER_W / 2 > support.x && player.x - PLAYER_W / 2 < support.x + support.w) {
@@ -646,16 +667,17 @@ function drawStar(x, y, radius, fill) {
 }
 
 function render() {
-  const background = ctx.createLinearGradient(0, 0, 0, H);
+  const background = ctx.createLinearGradient(0, -viewExtra, 0, H);
   background.addColorStop(0, "#142b3b");
   background.addColorStop(1, "#244653");
   ctx.fillStyle = background;
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillRect(0, -viewExtra, W, H + viewExtra);
   ctx.lineWidth = 1;
   // A deterministic paper-grain sky; it never needs image files.
-  for (let i = 0; i < 95; i++) {
+  for (let i = 0; i < 95 * (1 + viewExtra / H); i++) {
     const x = (i * 137.51 + 17) % W;
-    const y = ((i * 91.73 - camera * .18) % H + H) % H;
+    const skyHeight = H + viewExtra;
+    const y = ((i * 91.73 - camera * .18) % skyHeight + skyHeight) % skyHeight - viewExtra;
     ctx.fillStyle = i % 4 ? "#dbe5d04b" : "#e9bd84a0";
     ctx.beginPath();
     ctx.arc(x, y, i % 4 ? .8 : 1.6, 0, Math.PI * 2);
@@ -815,7 +837,9 @@ function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.max(1, Math.round(rect.width * dpr));
   canvas.height = Math.max(1, Math.round(rect.height * dpr));
-  ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+  viewExtra = Math.max(0, W * rect.height / rect.width - H);
+  ctx.setTransform(canvas.width / W, 0, 0, canvas.height / (H + viewExtra), 0,
+    canvas.height * viewExtra / (H + viewExtra));
   render();
 }
 
@@ -844,7 +868,8 @@ function setFocusMode(on) {
 const steeringKeys = ["ArrowLeft", "ArrowRight", "KeyA", "KeyD"];
 document.addEventListener("keydown", event => {
   if (ui.resetDialog.open) return;
-  if (event.target === ui.resetBest && (event.code === "Space" || event.code === "Enter")) return;
+  if ((event.target === ui.resetBest || event.target === ui.restart || Object.values(touchButtons).includes(event.target)) &&
+      (event.code === "Space" || event.code === "Enter")) return;
   if (![...steeringKeys, "Space", "Enter", "KeyP", "Escape", "KeyF"].includes(event.code)) return;
   if (event.code === "Space" && mode === "playing") {
     event.preventDefault();
@@ -889,6 +914,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 window.addEventListener("pagehide", saveBest);
+window.addEventListener("pagehide", clearTouchControls);
 window.addEventListener("resize", resize);
 ui.primary.addEventListener("click", () => {
   if (mode === "paused") resume();
@@ -916,6 +942,48 @@ ui.resetDialog.addEventListener("close", () => {
   spaceHeld = false;
   ui.resetBest.focus();
 });
+
+for (const [action, button] of Object.entries(touchButtons)) {
+  button.addEventListener("pointerdown", event => {
+    if (event.button !== 0 || mode !== "playing" || ui.resetDialog.open) return;
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+    touchPointers.set(event.pointerId, action);
+    button.classList.add("held");
+    if (action === "jump") jump();
+  });
+  const release = event => {
+    touchPointers.delete(event.pointerId);
+    if (![...touchPointers.values()].includes(action)) button.classList.remove("held");
+  };
+  button.addEventListener("pointerup", release);
+  button.addEventListener("pointercancel", release);
+  button.addEventListener("lostpointercapture", release);
+  // Keyboard/screen-reader activation has no pointerdown. Do not duplicate a touch jump.
+  button.addEventListener("click", event => {
+    if (event.detail !== 0 || mode !== "playing") return;
+    if (action === "jump") jump();
+  });
+  if (action !== "jump") {
+    button.addEventListener("keydown", event => {
+      if (!["Space", "Enter"].includes(event.code)) return;
+      event.preventDefault();
+      if (mode === "playing") {
+        touchPointers.set("keyboard-" + action, action);
+        button.classList.add("held");
+      }
+    });
+    button.addEventListener("keyup", event => {
+      if (!["Space", "Enter"].includes(event.code)) return;
+      touchPointers.delete("keyboard-" + action);
+      button.classList.remove("held");
+    });
+    button.addEventListener("blur", () => {
+      touchPointers.delete("keyboard-" + action);
+      button.classList.remove("held");
+    });
+  }
+}
 
 resetWorld();
 resize();
