@@ -46,9 +46,16 @@ const touchButtons = {
 };
 function clearTouchControls() {
   touchPointers.clear();
+  updateTouchButtons();
   for (const button of Object.values(touchButtons)) {
-    button.classList.remove("held");
     if (button === document.activeElement) button.blur();
+  }
+}
+function updateTouchButtons() {
+  for (const [action, button] of Object.entries(touchButtons)) {
+    const held = [...touchPointers.values()].includes(action);
+    button.classList.toggle("held", held);
+    if (action !== "jump") button.setAttribute("aria-pressed", String(held));
   }
 }
 const boostContacts = new Set();
@@ -949,12 +956,12 @@ for (const [action, button] of Object.entries(touchButtons)) {
     event.preventDefault();
     button.setPointerCapture(event.pointerId);
     touchPointers.set(event.pointerId, action);
-    button.classList.add("held");
+    updateTouchButtons();
     if (action === "jump") jump();
   });
   const release = event => {
     touchPointers.delete(event.pointerId);
-    if (![...touchPointers.values()].includes(action)) button.classList.remove("held");
+    updateTouchButtons();
   };
   button.addEventListener("pointerup", release);
   button.addEventListener("pointercancel", release);
@@ -963,24 +970,40 @@ for (const [action, button] of Object.entries(touchButtons)) {
   button.addEventListener("click", event => {
     if (event.detail !== 0 || mode !== "playing") return;
     if (action === "jump") jump();
+    else {
+      const held = touchPointers.has("accessible-" + action);
+      touchPointers.delete("accessible-left");
+      touchPointers.delete("accessible-right");
+      if (!held) touchPointers.set("accessible-" + action, action);
+      updateTouchButtons();
+    }
   });
-  if (action !== "jump") {
+  if (action === "jump") {
+    button.addEventListener("keydown", event => {
+      if (!["Space", "Enter"].includes(event.code)) return;
+      event.preventDefault();
+      if (!event.repeat) jump();
+    });
+    button.addEventListener("keyup", event => {
+      if (["Space", "Enter"].includes(event.code)) event.preventDefault();
+    });
+  } else {
     button.addEventListener("keydown", event => {
       if (!["Space", "Enter"].includes(event.code)) return;
       event.preventDefault();
       if (mode === "playing") {
         touchPointers.set("keyboard-" + action, action);
-        button.classList.add("held");
+        updateTouchButtons();
       }
     });
     button.addEventListener("keyup", event => {
       if (!["Space", "Enter"].includes(event.code)) return;
       touchPointers.delete("keyboard-" + action);
-      button.classList.remove("held");
+      updateTouchButtons();
     });
     button.addEventListener("blur", () => {
       touchPointers.delete("keyboard-" + action);
-      button.classList.remove("held");
+      updateTouchButtons();
     });
   }
 }

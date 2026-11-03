@@ -22,6 +22,11 @@ Safari browser with JavaScript enabled. Keep `index.html`, `styles.css`, and
   does not grant an air jump. Releasing/canceling touches, pausing, leaving the
   app, or restarting clears held steering. Opposite directions cancel each other.
   Solar Fold boosts remain automatic.
+  With a screen reader, activating Left/Right toggles that direction on or off;
+  activating the other direction switches it. The buttons expose their pressed
+  state. Pause, restart, or leaving the app also stops toggled steering.
+  On a keyboard-focused Jump button, Space/Enter jumps on a fresh press only;
+  holding the key or releasing an airborne press after landing does not jump.
 - Press **Space** to jump **only while standing on a normal platform**. Release it and
   press again for the next jump. Holding Space does not repeat jumps; there are
   no air jumps or automatic bounces on normal platforms. Starting a run leaves you standing still.
