@@ -52,7 +52,15 @@
         </div>
       </div>
       </div>
-      <footer class="game-footer"><span id="status" role="status" aria-live="polite">Ready for takeoff</span><span id="footer-hint">Touch gold = auto boost</span><span class="version" aria-label="Version v1.1">v1.1</span></footer>
+      <div class="touch-controls" aria-label="Touch game controls">
+        <div class="touch-steering">
+          <button id="touch-left" aria-label="Steer left: hold, or activate to toggle" aria-pressed="false">&#8592;</button>
+          <button id="touch-right" aria-label="Steer right: hold, or activate to toggle" aria-pressed="false">&#8594;</button>
+        </div>
+        <span class="rotate-hint">Hold to steer<br>Tap to jump</span>
+        <button id="touch-jump" aria-label="Jump from a platform">Jump</button>
+      </div>
+      <footer class="game-footer"><span id="status" role="status" aria-live="polite">Ready for takeoff</span><span id="footer-hint">Touch gold = auto boost</span><span class="version" aria-label="Version v1.2">v1.2</span></footer>
       <p id="storage-note" class="storage-note" role="status" hidden></p>
     </section>
     <p class="signature">A universe made of small things. <span>Fold. Leap. Wonder.</span></p>

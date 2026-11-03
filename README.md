@@ -16,6 +16,17 @@ Safari browser with JavaScript enabled. Keep `index.html`, `styles.css`, and
 
 - Click **Begin exploring**, or press **Space / Enter**.
 - Steer with **Left / Right** or **A / D**.
+- On a touch device, **hold the Left/Right buttons** below the playfield to
+  steer and **tap Jump** with your other thumb. Multi-touch lets you steer and
+  jump together. Holding Jump does not repeat jumps, and tapping while airborne
+  does not grant an air jump. Releasing/canceling touches, pausing, leaving the
+  app, or restarting clears held steering. Opposite directions cancel each other.
+  Solar Fold boosts remain automatic.
+  With a screen reader, activating Left/Right toggles that direction on or off;
+  activating the other direction switches it. The buttons expose their pressed
+  state. Pause, restart, or leaving the app also stops toggled steering.
+  On a keyboard-focused Jump button, Space/Enter jumps on a fresh press only;
+  holding the key or releasing an airborne press after landing does not jump.
 - Press **Space** to jump **only while standing on a normal platform**. Release it and
   press again for the next jump. Holding Space does not repeat jumps; there are
   no air jumps or automatic bounces on normal platforms. Starting a run leaves you standing still.
@@ -47,8 +58,8 @@ Safari browser with JavaScript enabled. Keep `index.html`, `styles.css`, and
   You cannot wait indefinitely. Jump early and keep climbing.
 - Every run uses the **progressive all-four combo**, beginning with the original published
   quiet ink, then gradually mixes in sweeps, patrols, and occasional lunges as
-  active play time grows. A brief stage cue above the game announces the mix.
-  **Restart** starts a fresh run from the gentle introduction.
+  active play time grows. A brief desktop stage cue above the game announces the mix.
+  The desktop **Restart** button starts a fresh run from the gentle introduction.
   Watch the dotted travel lanes: moving ink crosses the normal
   jump corridors instead of staying safely at the edges. **Solid ink is lethal;
   hollow ink is harmless.** Falling below the view also ends your run.
@@ -65,10 +76,26 @@ window, keeping score, best, the unraveling bar, status, and the Pause and
 **Exit focus** buttons. Press **Esc**, **F**, or **Exit focus** to return to
 the normal page. In focus mode, Esc exits focus and pauses a running climb;
 **P** still pauses and resumes. The 960 x 720 world keeps its 4:3 shape and
-physics at every size, so it is scaled to fit. Windows that are wider or taller
+physics on desktop, so it is scaled to fit. Windows that are wider or taller
 than 4:3 show dark margins beside or above and below the playfield instead of
 stretching it. For edge-to-edge play, combine focus mode with your browser's
 own full screen (usually **F11**).
+
+### Mobile layout
+
+Phones and small touch tablets automatically use a compact game-only layout.
+The mobile HUD hides the ink-stage and Restart row to leave more height for
+the climb. Restart a finished run from the game-over screen.
+Touch controls sit **outside the canvas**, so thumbs do not cover hazards or
+platforms. **Portrait is the preferred mobile layout**: the canvas fills the
+available tall space and reveals additional world above the normal play area.
+The full 960-unit width is retained and artwork scales uniformly, without
+changing jump physics or rising-floor pressure. Landscape still works with an
+aspect-preserving fit. The extra portrait look-ahead can show future rows sooner;
+ink retains its generation-time behavior. Browser-bar resizing and safe-area insets are
+accounted for. Touching the controls does not scroll/zoom the page; browser
+zoom is not disabled globally. Use the overlay to begin, resume, or restart a
+finished run; Pause remains in the top score row. Keyboard play remains available.
 
 ### Four ink behaviors
 
@@ -235,10 +262,10 @@ their host platforms. Height and star point values are unchanged. Best scores us
 slot for the rising-unraveling ruleset; older records are kept untouched but
 are not shown.
 
-Keyboard play only. No audio, touch controls, accounts, network requests, runtime
+Keyboard and multi-touch play. No audio, accounts, network requests, runtime
 dependencies, or desktop packaging.
 
-The unobtrusive game-footer version label is **v1.1**. The display version does
+The unobtrusive game-footer version label is **v1.2**. The display version does
 not change the existing best-score storage key.
 
 ## License
