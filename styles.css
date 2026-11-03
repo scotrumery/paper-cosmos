@@ -1,0 +1,108 @@
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #183445;
+  background: #f2eedf;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 15% 15%, #fffaf0, transparent 65%), #f2eedf;
+}
+button { font: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid #e9a373; outline-offset: 5px; }
+.layout {
+  max-width: 1560px;
+  margin: auto;
+  padding: 48px 42px 24px;
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(360px, 960px);
+  column-gap: 40px;
+  align-items: center;
+}
+.intro { padding-bottom: 28px; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; }
+h1 { font-family: Georgia, serif; font-size: clamp(58px, 6.5vw, 84px); font-weight: 400; line-height: .98; letter-spacing: -4px; margin: 28px 0; }
+h1 span { color: #528d8b; }
+.tagline { font-family: Georgia, serif; font-size: 25px; line-height: 1.45; }
+.rule { width: 48px; height: 2px; background: #d79a70; margin: 32px 0; }
+.description { max-width: 310px; font-size: 15px; line-height: 1.85; color: #617079; }
+.controls { margin: 32px 0; }
+.controls div { margin: 18px 0; }
+.controls dt { font-size: 12px; }
+.controls dd { margin: 8px 0 0; color: #617079; font-size: 12px; }
+kbd { display: inline-block; font: 11px "Segoe UI", sans-serif; padding: 4px 7px; border: 1px solid #c9c9bd; border-radius: 4px; box-shadow: 0 2px 0 #deded2; background: #faf7ef; }
+.small-note { font-size: 11px; color: #7b857f; line-height: 1.8; }
+.game-panel { border: 1px solid #c9cbbf; border-radius: 15px; overflow: hidden; box-shadow: 0 22px 60px #1f39451b; background: #faf7ee; }
+.scoreboard { display: flex; align-items: center; gap: 26px; padding: 17px 23px; }
+.scoreboard div { display: flex; flex-direction: column; gap: 4px; }
+.score-label { font-size: 9px; letter-spacing: 1.8px; color: #62736f; font-weight: 700; }
+.scoreboard strong { font-family: Georgia, serif; font-size: 26px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.pressure-bar { padding: 8px 14px; background: #f0dfc9; border-top: 1px solid #d6bd9f; color: #804b3e; font-size: 10px; font-weight: 700; letter-spacing: .8px; }
+.pause-button { margin-left: auto; padding: 8px 11px; border-radius: 5px; border: 1px solid #c9cbbf; background: transparent; font-size: 11px; color: #183445; }
+.pause-button:disabled { opacity: .4; cursor: default; }
+.focus-button { margin-left: 0; }
+.stage { position: relative; aspect-ratio: 4 / 3; background: #142b3b; }
+canvas { display: block; width: 100%; height: 100%; }
+.overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; background: #10263745; }
+.overlay[hidden] { display: none; }
+.overlay-card { text-align: center; padding: 33px 24px 24px; width: 100%; max-width: 350px; border: 1px solid #eee6d159; border-radius: 6px; background: #f8f3e9f5; box-shadow: 0 10px 40px #071b3540; }
+.overlay-card .eyebrow { color: #638d85; font-size: 9px; letter-spacing: 2px; }
+h2 { font: 38px/1.08 Georgia, serif; letter-spacing: -1px; margin: 20px 0; }
+.overlay-card p:not(.eyebrow) { font-size: 12px; line-height: 1.8; color: #617079; }
+#primary { border: none; border-radius: 4px; background: #245257; color: #fff9e9; padding: 14px 23px; margin: 12px 0; font-size: 13px; }
+#primary:hover { background: #183f44; }
+#primary span { margin-left: 15px; }
+.overlay-card .overlay-hint { font-size: 8px !important; letter-spacing: 1.4px; }
+.game-footer { display: flex; justify-content: space-between; gap: 8px; padding: 12px 19px; font-size: 10px; color: #62736f; }
+.storage-note { margin: 0; border-top: 1px solid #d9c7ab; padding: 10px 19px; color: #795431; font-size: 11px; line-height: 1.5; }
+.signature { grid-column: 1 / -1; display: flex; justify-content: space-between; color: #7b857f; font-size: 10px; letter-spacing: 1px; margin: 28px 0 0; }
+@media (max-width: 1000px) {
+  .layout { gap: 30px; padding: 24px; grid-template-columns: minmax(200px, 1fr) minmax(360px, 600px); }
+  h1 { font-size: 56px; }
+  .tagline { font-size: 20px; }
+  .description { font-size: 13px; }
+  .scoreboard { gap: 15px; padding: 14px; }
+}
+@media (max-width: 760px) {
+  .layout { display: flex; flex-direction: column; padding: 20px 14px; gap: 20px; }
+  .intro { width: 100%; max-width: 960px; padding: 0; }
+  .intro > .eyebrow { font-size: 9px; margin: 0 0 12px; }
+  h1 { font-size: 44px; margin: 0; letter-spacing: -2px; }
+  h1 br { display: none; }
+  .tagline { font-size: 16px; margin: 10px 0; }
+  .tagline br { display: none; }
+  .description, .rule, .small-note { display: none; }
+  .controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0 0; }
+  .controls div { margin: 0; }
+  .controls dd { font-size: 10px; }
+  .game-panel { width: 100%; max-width: 960px; }
+  .overlay { padding: 10px; }
+  .overlay-card { padding: 14px; }
+  h2 { font-size: 28px; margin: 12px 0; }
+  .overlay-card p:not(.eyebrow) { margin: 8px 0; }
+  .overlay-card .overlay-hint { letter-spacing: .8px; }
+  .signature { width: 100%; max-width: 960px; font-size: 8px; margin: 0; gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto; }
+}
+/* Focus mode: only the game panel, sized to the viewport. The 4:3 world is
+   fitted inside the remaining space, so wide or tall windows show margins. */
+body.focus-mode { overflow: hidden; background: #0d1f2b; }
+body.focus-mode .intro, body.focus-mode .signature { display: none; }
+body.focus-mode .layout { display: block; max-width: none; height: 100vh; height: 100dvh; padding: 0; margin: 0; }
+body.focus-mode .game-panel { display: flex; flex-direction: column; width: 100%; max-width: none; height: 100%; border: 0; border-radius: 0; box-shadow: none; }
+body.focus-mode .stage-frame { flex: 1; min-height: 0; display: grid; place-items: center; container-type: size; background: #0d1f2b; }
+body.focus-mode .stage { width: min(100cqw, 100cqh * 4 / 3); }
+body.focus-mode .scoreboard { padding: 8px 16px; }
+body.focus-mode .scoreboard strong { font-size: 20px; }
+body.focus-mode .game-footer { padding: 7px 16px; }
+@media (max-width: 480px) {
+  .overlay-card { padding: 8px; }
+  .overlay-card h2 { font-size: 22px; margin: 6px 0; }
+  .overlay-card .eyebrow, .overlay-card .overlay-hint { display: none; }
+  .overlay-card p:not(.eyebrow) { font-size: 10.5px; line-height: 1.4; margin: 6px 0; }
+  #primary { padding: 9px 18px; margin: 6px 0; font-size: 12px; }
+}

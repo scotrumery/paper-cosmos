@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142b3b">
+  <title>Paper Cosmos - A little leap into the extraordinary</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <main class="layout">
+    <section class="intro" aria-labelledby="title">
+      <p class="eyebrow">AN ORIGAMI EXPEDITION</p>
+      <h1 id="title">Paper <br><span>Cosmos.</span></h1>
+      <p class="tagline">A little leap into<br>the extraordinary.</p>
+      <div class="rule"></div>
+      <p class="description">Fold yourself into the stars. Climb a constellation of paper, gather little lights, and steer clear of wandering ink.</p>
+      <dl class="controls">
+        <div><dt><kbd>&larr;</kbd> <kbd>&rarr;</kbd> / <kbd>A</kbd> <kbd>D</kbd></dt><dd>Steer your explorer</dd></div>
+        <div><dt><kbd>Space</kbd></dt><dd>Jump from a platform</dd></div>
+        <div><dt><kbd>Enter</kbd></dt><dd>Begin / restart a finished run</dd></div>
+        <div><dt><kbd>P</kbd> / <kbd>Esc</kbd></dt><dd>Pause / resume</dd></div>
+        <div><dt><kbd>F</kbd></dt><dd>Focus mode: game fills the window (Esc exits)</dd></div>
+      </dl>
+      <p class="small-note">Touch gold from above to boost three rows; steer to land.<br>Catch stars for sparkles. Stay above the coral edge.</p>
+    </section>
+    <section class="game-panel" aria-label="Paper Cosmos game">
+      <header class="scoreboard">
+        <div><span class="score-label">STARDUST</span><strong id="score">0</strong></div>
+        <div><span class="score-label">PERSONAL BEST</span><strong id="best">0</strong></div>
+        <button id="pause" class="pause-button" disabled aria-label="Pause game">Pause</button>
+                <button id="focus" class="pause-button focus-button" aria-pressed="false" title="Hide the page around the game (F). Esc exits.">Focus mode</button>
+              </header>
+              <div id="pressure" class="pressure-bar">UNRAVELING IN 4s - KEEP CLIMBING</div>
+              <div class="stage-frame">
+              <div class="stage">
+        <canvas id="cosmos" width="960" height="720" aria-label="Origami explorer on branching moving constellation platforms. Use Left/Right or A/D to steer, and a fresh Space press to jump from normal platforms. Touch the gold-framed area of a solar fold to boost automatically. Collect stars for sparkles and stay above the rising coral edge as it consumes the platforms below.">This game needs a browser with HTML canvas support.</canvas>
+        <div id="overlay" class="overlay">
+          <div class="overlay-card">
+            <p class="eyebrow" id="overlay-kicker">YOUR NEXT CHAPTER</p>
+            <h2 id="overlay-title">The stars are<br>within reach.</h2>
+            <p id="overlay-copy">Keep ahead of the rising coral edge.<br>It unravels the platforms and steadily gets faster.<br>Touch gold for a boost; catch stars for sparkle.</p>
+            <button id="primary">Begin exploring <span aria-hidden="true">&rarr;</span></button>
+            <p class="overlay-hint" id="overlay-hint">LEFT / RIGHT OR A / D TO STEER &middot; SPACE TO JUMP</p>
+          </div>
+        </div>
+      </div>
+      </div>
+      <footer class="game-footer"><span id="status" role="status" aria-live="polite">Ready for takeoff</span><span id="footer-hint">Touch gold = auto boost</span></footer>
+      <p id="storage-note" class="storage-note" role="status" hidden></p>
+    </section>
+    <p class="signature">A universe made of small things. <span>Fold. Leap. Wonder.</span></p>
+  </main>
+</body>
+</html>
