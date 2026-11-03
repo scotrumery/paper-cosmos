@@ -6,7 +6,8 @@ external assets or copied Copilot artwork or code.
 
 ## Launch
 
-Double-click `index.html` in `C:\Users\scot\Code\Games\PaperCosmos`, or open it
+Clone or download this repository to any folder on your computer. If you download
+a ZIP, extract it first. Double-click `index.html` in that folder, or open it
 from your browser's File > Open menu. Use a current Edge, Chrome, Firefox, or
 Safari browser with JavaScript enabled. Keep `index.html`, `styles.css`, and
 `game.js` together. No server, installation, build step, or internet is required.
@@ -38,10 +39,19 @@ Safari browser with JavaScript enabled. Keep `index.html`, `styles.css`, and
   Climbing also earns **1 per 10 height units**.
 - **Stay ahead of the unraveling.** After a four-second grace period, the
   coral paper edge rises and consumes every platform whose top reaches it.
-  Its HUD countdown changes to an ascent-speed indicator. Touching the edge
+  Both its world ascent speed and its position above the screen bottom tighten
+  smoothly throughout the run. The HUD shows speed in world units/second,
+  extra floor rise above its original position, and your feet's lead over it.
+  Touching the edge
   with your feet ends the run, even if you were standing on a platform.
   You cannot wait indefinitely. Jump early and keep climbing.
-- Avoid the dark ink clouds. Hitting one or falling below the view ends your run.
+- Every run uses the **progressive all-four combo**, beginning with the original published
+  quiet ink, then gradually mixes in sweeps, patrols, and occasional lunges as
+  active play time grows. A brief stage cue above the game announces the mix.
+  **Restart** starts a fresh run from the gentle introduction.
+  Watch the dotted travel lanes: moving ink crosses the normal
+  jump corridors instead of staying safely at the edges. **Solid ink is lethal;
+  hollow ink is harmless.** Falling below the view also ends your run.
 - Press **P / Esc**, or use the **Pause / Resume** button. Returning to the window
   does not automatically resume: lost focus or a hidden tab pauses and clears
   steering. The edge, difficulty clock, and sparkle effects all freeze while paused.
@@ -60,10 +70,98 @@ than 4:3 show dark margins beside or above and below the playfield instead of
 stretching it. For edge-to-edge play, combine focus mode with your browser's
 own full screen (usually **F11**).
 
+### Four ink behaviors
+
+1. **Original quiet ink:** the published stationary, 27-unit-radius blots.
+   Placement is attempted every second row after row two, but only outside the
+   original normal-jump, moving-platform, side-hop, and Solar Fold corridor
+   exclusions. Its interior animates; its position stays fixed. Solid ink is
+   still lethal if you take a side detour into it. This is the gentle introduction,
+   not a new aggressive variant.
+2. **Comet sweep:** an amber dashed lane and `INCOMING` cue warn for **1.2s**,
+   followed by a **1.2s** crossing. It rests harmlessly for **2.6s** before
+   warning and sweeping back the other way.
+3. **Orbit patrol:** solid ink moves continuously back and forth along a
+   350-unit horizontal lane. Jump behind it or go around its footprint.
+4. **Snapshot lunge:** a crosshair locks a bounded snapshot of your position.
+   It warns for **1.25s**, lunges for **0.45s**, and holds for **0.18s**.
+   Move away from the locked target; it never tracks you during the warning
+   or strike. Its **0.8s retreat** and **2.6s rest** are harmless.
+
+The three moving behaviors get a harmless **one-second wake-up** when you approach within
+420 vertical units from below (or approach from above). Sweeps and lunges then
+give their full warning before their first attack. One moving 24-unit-radius hazard
+is placed in the gap before each fourth row, centered on the normal route's
+travel corridor. Its lane extends 175 units each way; gaps of three intervening
+rows separate moving hazards. Lunges can reach 65 units up/down from their home height
+and 175 units sideways. Collisions sweep relative motion, including boosted
+flight and fast ink, against the explorer's full rectangle.
+
+Landing geometry and the third-row boost are unchanged, but their corridors
+are **not permanently ink-free** once moving ink joins: timing and avoidance matter. Plan
+before jumping or touching gold. A platform is not an unlimited safe waiting
+place because the rising floor continues to close. Pausing, focus loss, and a
+hidden tab freeze ink motion, warning clocks, the floor, and particles together.
+Restart resets all attacks, targets, weights, and the active-time stage clock.
+Every run uses the progressive combo.
+
+### Progressive mix
+
+The transitions use smoothstep (`s*s*(3-2*s)`, with `s` clamped from 0 to 1)
+over **active seconds**, never wall-clock time:
+
+| Active run time | What changes for newly generated ink |
+|---|---|
+| 0-20s | Original quiet ink only |
+| 20-50s | Sweep weight rises smoothly; original weight falls |
+| 50-60s | Sweep-dominated introduction |
+| 60-100s | Patrols gradually join the sweep mix |
+| 100-110s | Patrol/sweep mix |
+| 110-160s | Occasional lunges gradually join as variety, not a hardest-mode replacement |
+| 160s onward | Stable varied mix; the floor still accelerates |
+
+Let `S`, `P`, and `L` be the smooth transitions over 20-50s, 60-100s, and
+110-160s respectively. With `M=0.95*S`, the per-candidate weights are
+`original=1-M`, `sweep=M*(1-0.55*P-0.20*L)`, `patrol=M*0.55*P`,
+and `lunge=M*0.20*L`. Late weights are **5%, 23.75%, 52.25%, 19%**.
+
+Each eligible even row after row two draws once. Original ink uses its faithful
+safe-side placement, which can fail if no side is clear. Moving ink is admitted
+only on every fourth row, preserving three intervening rows between moving
+hazards; other moving draws intentionally spawn nothing. Thus weights are
+candidate probabilities, not guaranteed final counts. Before safe-side skips,
+late encounters are about 9.5% original / 22.6% sweep / 49.8% patrol / 18.1% lunge.
+Original ink cannot dominate late play.
+
+Behavior is assigned **once at generation**, with its birth time recorded.
+Already visible blots never change behavior when a stage threshold is crossed.
+Generation runs only during active play (apart from the initial quiet preview);
+the short look-ahead means a new mix may appear a few rows after its HUD cue.
+Moving blots still give their full wake-up and attack warnings when approached.
+Every restart starts its clock and introductory weights over at zero.
+
 Best score is saved in this browser where local storage is permitted. File-based
 storage policies vary between browsers. If reading or writing storage fails, a
 visible notice explains that best score lasts only for this visit; play still works.
 Scores are saved on pause, game over, and page departure.
+
+### Clear personal best
+
+Hover over **Personal Best** to reveal a small, subdued reset arrow beside the
+number. The arrow is hidden otherwise, with its space reserved to avoid layout
+shift. Keyboard users can Tab to the arrow to reveal and activate it with
+Enter or Space. There is deliberately no always-visible touch reset control.
+Activate it to open a confirmation; **Keep my record** or **Esc** cancels.
+A running climb pauses while you decide and stays paused if you cancel.
+**Clear best & end run** removes only this game's current best-score storage key,
+clears the displayed record, and ends any existing run so its score cannot
+immediately restore the record. The next fresh run can earn a new best normally.
+Other storage, preferences, and older score keys are left alone.
+
+Records belong to this browser and origin: **the local file and hosted GitHub
+Pages game have separate records**. Clear the best in the version you play.
+If browser storage blocks removal, the game explicitly reports that the reset
+applies only to this visit and the old saved record may return after reload.
 
 The world is **960 x 720** logical units (33% wider than the previous 720-unit
 world, and twice the original 480-unit width), with a 4:3 desktop playfield up to
@@ -83,20 +181,25 @@ Spacing reserves both platforms' full motion envelopes inside 86% of the actual
 descending flight-time steering range, minus 12 extra units. Consecutive platform
 centers remain reachable even at opposite movement extremes; you still have to
 steer and deliberately jump. Two levels exceed the normal jump height, so they
-cannot be skipped without a boost. Clouds stay outside the normal route's full
-movement envelopes and normal-height side hops, including overlapping jump
-overshoots from earlier platforms.
+cannot be skipped without a boost. Ink crosses these corridors intentionally;
+the motion-envelope checks guarantee platform reach, not automatic hazard avoidance.
 
 The unraveling starts at world y=688 (32 units above the initial bottom).
 After four active seconds, its timed speed rises continuously from zero using
-`24 * (1 - exp(-u / 3)) + 86 * (1 - exp(-u / 90))` units/s, where `u` is
-active time after the grace period. Speed is about 26 units/s at 10 seconds,
-46 at 30, 64 at 60, 86 at 120, and approaches 110. Its analytically integrated
+`24 * (1 - exp(-u / 3)) + 136 * u / (u + 100)` units/s, where `u` is
+active time after the grace period. Speed is about 28 units/s at 10 seconds,
+52 at 30, 73 at 60, 97 at 120, 126 at 300, and 140 at 600. It keeps
+increasing, approaching 160 (below sustained normal-jump climbing speed, rather
+than eventually making every run mathematically impossible). Its analytically integrated
 distance is independent of frame rate. Jump, gravity, steering, and platform
-motion speeds do not accelerate. Climbing quickly also brings the edge up to
-32 units above the screen bottom, so you cannot build an unlimited safety lead;
-it never moves back down. This camera catch-up is separate from the smoothly
-increasing timed speed shown in the HUD.
+motion speeds do not accelerate. The camera-follow floor is now
+`32 + 220 * u / (u + 100)` units above the screen bottom, rather than always 32.
+It reaches about 111 units at 60 seconds, 150 at 120, 196 at 300, and 220 at 600,
+approaching 252. This visibly reduces your lead even while climbing steadily:
+the old fixed 32-unit camera clamp masked timed acceleration during fast play.
+The actual boundary is whichever is higher, the integrated timed ascent or
+this tightening camera floor; it never moves down. Later avoidance windows
+are shorter, so use the warnings to commit promptly rather than wait a full cycle.
 
 Consumed platforms, their stars and solar pads, and stale rider/contact
 references are removed together before physics. Objects are also pruned below
@@ -121,21 +224,22 @@ at **140 units each**. The first stays over the normal route to preserve the
 approach; the following two converge toward the pad's lane.
 Top contact launches with your feet 32 units above the pad, leaving at least
 12.8 units of apex clearance over the third row even at the largest gaps.
-The motion envelopes remain inside normal-jump steering reach, and ink stays
-outside the boost landing lane. Contact from the side or underside still boosts
+The motion envelopes remain inside normal-jump steering reach. Ink can cross
+the boost lane, so watch its phase before contact. Contact from the side or underside still boosts
 automatically, but starting lower can reduce how many rows you skip. Normal
-Space jumps, platform speeds and the unraveling's acceleration are unchanged.
+Space jumps and platform speeds are unchanged.
 
 There is **one collectible star per four higher levels**, on the normal-route
 platform, down from one on every platform in the original game. Stars follow
-their host platforms. Ink placement is attempted every second higher level
-after the first two, but only where safe clearance
-exists. Height and star point values are unchanged. Best scores use a new save
+their host platforms. Height and star point values are unchanged. Best scores use the existing save
 slot for the rising-unraveling ruleset; older records are kept untouched but
 are not shown.
 
 Keyboard play only. No audio, touch controls, accounts, network requests, runtime
 dependencies, or desktop packaging.
+
+The unobtrusive game-footer version label is **v1.1**. The display version does
+not change the existing best-score storage key.
 
 ## License
 
